@@ -1,0 +1,15 @@
+
+⚠️ IMPORTANT: This file is a placeholder.
+
+Please copy the content of the 'frontend_app_webgl' artifact to create App.js
+
+The App.js file is approximately 650 lines and contains:
+- React main application component
+- Galaxy background integration
+- Chat interface
+- Chart rendering
+- Data table display
+- Status monitoring
+
+Artifact name: frontend_app_webgl
+Target file: frontend/src/App.js

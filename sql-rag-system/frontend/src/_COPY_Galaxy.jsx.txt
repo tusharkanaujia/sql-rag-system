@@ -1,0 +1,14 @@
+
+⚠️ IMPORTANT: This file is a placeholder.
+
+Please copy the WebGL Galaxy component from the document you provided earlier.
+
+The Galaxy.jsx file is approximately 350 lines and contains:
+- WebGL shader code
+- OGL rendering
+- Mouse interaction
+- Star field generation
+- Customizable parameters
+
+Source: The document you provided with the OGL imports
+Target file: frontend/src/Galaxy.jsx
