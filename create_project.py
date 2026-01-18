@@ -1,236 +1,239 @@
 #!/usr/bin/env python3
 """
-SQL Server RAG System - Automatic Project Generator
-This script creates all necessary files and directory structure
+SQL Server RAG System - Complete Project Generator
+Generates all files needed for the SQL Server RAG System
 """
 
 import os
 import sys
 
-def create_directory_structure():
-    """Create all necessary directories"""
-    directories = [
-        "sql-rag-system",
-        "sql-rag-system/backend",
-        "sql-rag-system/frontend",
-        "sql-rag-system/frontend/public",
-        "sql-rag-system/frontend/src"
-    ]
-    
-    for directory in directories:
-        os.makedirs(directory, exist_ok=True)
-        print(f"✓ Created directory: {directory}")
+# Color codes for terminal output
+GREEN = '\033[92m'
+BLUE = '\033[94m'
+YELLOW = '\033[93m'
+RED = '\033[91m'
+RESET = '\033[0m'
+
+def print_status(msg):
+    print(f"{BLUE}[INFO]{RESET} {msg}")
+
+def print_success(msg):
+    print(f"{GREEN}[✓]{RESET} {msg}")
+
+def print_warning(msg):
+    print(f"{YELLOW}[!]{RESET} {msg}")
+
+def print_error(msg):
+    print(f"{RED}[✗]{RESET} {msg}")
 
 def create_file(path, content):
-    """Create a file with given content"""
+    """Create a file with content"""
     try:
+        os.makedirs(os.path.dirname(path), exist_ok=True)
         with open(path, 'w', encoding='utf-8') as f:
             f.write(content)
-        print(f"✓ Created file: {path}")
+        print_success(f"Created: {path}")
         return True
     except Exception as e:
-        print(f"✗ Failed to create {path}: {e}")
+        print_error(f"Failed to create {path}: {e}")
         return False
 
-def generate_files():
-    """Generate all project files"""
+def main():
+    print("\n" + "="*70)
+    print(f"{BLUE}🌌 SQL Server RAG System - Complete Project Generator{RESET}")
+    print("="*70 + "\n")
     
+    base_dir = "sql-rag-system"
+    
+    # Create directory structure
+    print_status("Creating directory structure...")
+    dirs = [
+        base_dir,
+        f"{base_dir}/backend",
+        f"{base_dir}/frontend",
+        f"{base_dir}/frontend/public",
+        f"{base_dir}/frontend/src"
+    ]
+    
+    for d in dirs:
+        os.makedirs(d, exist_ok=True)
+    
+    print_success(f"Created {len(dirs)} directories\n")
+    
+    # File contents
     files = {}
     
-    # ==================== ROOT FILES ====================
+    # ========== ROOT FILES ==========
     
-    files["sql-rag-system/README.md"] = '''# 🌌 SQL Server RAG System with Galaxy Background
+    files[f"{base_dir}/README.md"] = """# 🌌 SQL Server RAG System with Galaxy Background
 
-A beautiful, intelligent database query interface that lets you chat with your SQL Server database using natural language. Powered by local LLMs and featuring a stunning WebGL galaxy background.
-
-![Version](https://img.shields.io/badge/version-1.0.0-blue)
-![Python](https://img.shields.io/badge/python-3.8+-green)
-![React](https://img.shields.io/badge/react-18.2+-61dafb)
-![License](https://img.shields.io/badge/license-MIT-orange)
+A beautiful, intelligent database query interface powered by local LLMs with a stunning WebGL galaxy background.
 
 ## ✨ Features
 
-- 🌌 **WebGL Galaxy Background** - Interactive starfield with mouse interaction
-- 🤖 **Local LLM Integration** - No external API calls, 100% private
-- 💬 **Natural Language Queries** - Ask questions in plain English
-- 📊 **Auto Visualizations** - Generates charts based on data type
-- 🔒 **Privacy First** - All processing happens locally
-- 📝 **Query History** - Track your searches
-- 🎨 **Customizable** - Colors, themes, and settings
+- 🌌 **WebGL Galaxy Background** - Interactive animated starfield
+- 🤖 **Local LLM** - Privacy-first, no API costs
+- 💬 **Natural Language** - Talk to your database in plain English
+- 📊 **Auto Charts** - Bar, line, and pie chart generation
+- 🔒 **100% Private** - All processing happens locally
+- 📝 **Smart Context** - Remembers conversation history
 
 ## 🚀 Quick Start
 
-### Prerequisites
-- Python 3.8+
-- Node.js 14+
-- SQL Server
-- Ollama (or another local LLM server)
+```bash
+# 1. Backend
+cd backend
+pip install -r requirements.txt
+cp .env.template .env  # Edit with your DB settings
+python app.py
 
-### Installation
+# 2. Frontend (new terminal)
+cd frontend
+npm install
+npm start
 
-1. **Setup Backend**
-   ```bash
-   cd backend
-   pip install -r requirements.txt
-   cp .env.template .env
-   # Edit .env with your settings
-   python app.py
-   ```
-
-2. **Setup Frontend**
-   ```bash
-   cd frontend
-   npm install
-   npm start
-   ```
-
-3. **Start Ollama**
-   ```bash
-   ollama serve
-   ollama pull llama3.1
-   ```
-
-📖 **For detailed instructions, see QUICK_START.md**
-
-## 🎯 Example Queries
-
+# 3. Ollama (new terminal)
+ollama serve
+ollama pull llama3.1
 ```
-"What tables are in my database?"
-"Show me 10 rows from the customers table"
-"Count total orders by month"
-"Top 5 products by revenue"
-```
+
+Open http://localhost:3000
 
 ## 📚 Documentation
 
-- **QUICK_START.md** - Get running in 15 minutes
-- **SETUP_INSTRUCTIONS.md** - Detailed setup guide
+- See `backend/README.md` for API documentation
+- See `frontend/README.md` for frontend details
+- Example queries and customization in docs
 
 ## 🛠️ Tech Stack
 
-- **Backend:** FastAPI, PyODBC, Pandas
-- **Frontend:** React 18, Recharts, OGL (WebGL)
-- **AI/LLM:** Ollama, Llama 3.1, CodeLlama
+- Backend: FastAPI, PyODBC, Pandas
+- Frontend: React, Recharts, OGL (WebGL)
+- AI: Ollama, Llama 3.1 / CodeLlama
 
 ## 📝 License
 
-MIT License - feel free to use this project for personal or commercial purposes.
+MIT License - Free to use and modify
+"""
 
----
+    files[f"{base_dir}/backend/README.md"] = """# Backend - SQL Server RAG API
 
-**Built with ❤️ for database administrators and data analysts**
-'''
+FastAPI server that converts natural language to SQL queries using local LLM.
 
-    files["sql-rag-system/QUICK_START.md"] = '''# 🚀 Quick Start Guide - SQL Server RAG System
-
-Get up and running in 15 minutes!
-
-## Prerequisites Check
-
-- [ ] Python 3.8+: `python --version`
-- [ ] Node.js 14+: `node --version`
-- [ ] SQL Server accessible
-- [ ] Ollama installed
-
-## Step 1: Setup Ollama (5 minutes)
+## Setup
 
 ```bash
-# Install Ollama
-# Windows: Download from https://ollama.com/download
-# Linux/Mac:
-curl -fsSL https://ollama.com/install.sh | sh
-
-# Pull a model
-ollama pull llama3.1
-
-# Start Ollama (keep this terminal open)
-ollama serve
-```
-
-## Step 2: Setup Backend (5 minutes)
-
-```bash
-cd backend
-
-# Install dependencies
 pip install -r requirements.txt
-
-# Create .env file
 cp .env.template .env
-
 # Edit .env with your database credentials
-# Windows: notepad .env
-# Linux/Mac: nano .env
-
-# Test connections
 python test_connection.py
-
-# Start backend
 python app.py
 ```
 
-## Step 3: Setup Frontend (5 minutes)
+## Configuration
 
-Open a NEW terminal:
+Edit `.env`:
 
-```bash
-cd frontend
-
-# Install dependencies
-npm install
-
-# Start development server
-npm start
+```env
+LLAMA_SERVER_URL=http://localhost:11434
+LLAMA_MODEL=llama3.1
+DB_SERVER=localhost
+DB_DATABASE=your_database
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
 ```
 
-Browser should open at `http://localhost:3000`
+## API Endpoints
 
-## 🎉 You're Ready!
+- `GET /` - API info
+- `GET /health` - Health check
+- `GET /schema` - Database schema
+- `GET /tables` - List tables
+- `GET /llama-status` - LLM server status
+- `POST /query` - Execute natural language query
 
-1. Check Status Tab - Verify connections are green ✅
-2. Try a query: "What tables do I have?"
-3. Explore the Schema tab
-4. Customize the Galaxy background colors!
+## Testing
 
-## 🐛 Troubleshooting
-
-**Backend won't start:**
 ```bash
 python test_connection.py
 ```
 
-**Frontend errors:**
+## Supported LLM Servers
+
+- Ollama (recommended)
+- text-generation-webui
+- LocalAI
+- Any OpenAI-compatible API
+"""
+
+    files[f"{base_dir}/frontend/README.md"] = """# Frontend - React Application
+
+React application with WebGL Galaxy background.
+
+## Setup
+
 ```bash
-rm -rf node_modules
 npm install
+npm start
 ```
 
-**Ollama not connecting:**
+Opens at http://localhost:3000
+
+## Components
+
+- **App.js** - Main application
+- **Galaxy.jsx** - WebGL background
+- **Galaxy.css** - Styles
+
+## Customization
+
+Edit Galaxy props in App.js:
+
+```javascript
+<Galaxy
+  hueShift={240}      // Color: 240=blue, 280=purple, 120=green
+  saturation={0.8}    // Color intensity (0-1)
+  glowIntensity={0.5} // Star brightness (0-1)
+  density={1.2}       // Star count (0.5-3)
+/>
+```
+
+## Build for Production
+
 ```bash
-curl http://localhost:11434/api/tags
+npm run build
 ```
-'''
 
-    # ==================== BACKEND FILES ====================
-    
-    files["sql-rag-system/backend/requirements.txt"] = '''fastapi==0.104.1
-uvicorn[standard]==0.24.0
-python-multipart==0.0.6
-pyodbc==0.4.39
-pandas==2.1.3
-sqlparse==0.4.4
-requests==2.31.0
-python-dotenv==1.0.0
-pydantic==2.4.2
-'''
+Output in `build/` directory.
+"""
 
-    files["sql-rag-system/backend/.env.template"] = '''# SQL Server RAG System - Environment Configuration
+    files[f"{base_dir}/backend/requirements.txt"] = """# FastAPI and web framework
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+python-multipart>=0.0.6
 
-# Local LLM Server Configuration
+# Database connectivity
+pyodbc>=4.0.39
+pandas>=2.0.0
+sqlparse>=0.4.4
+
+# HTTP requests for local LLM
+requests>=2.31.0
+
+# Additional utilities
+python-dotenv>=1.0.0
+pydantic>=2.4.0
+"""
+
+    files[f"{base_dir}/backend/.env.template"] = """# ============================================
+# SQL Server RAG System - Configuration
+# ============================================
+
+# Local LLM Server
 LLAMA_SERVER_URL=http://localhost:11434
 LLAMA_MODEL=llama3.1
 
-# SQL Server Database Configuration
+# SQL Server Database
 DB_SERVER=localhost
 DB_DATABASE=your_database_name
 DB_USERNAME=your_username
@@ -238,36 +241,24 @@ DB_PASSWORD=your_password
 DB_TRUSTED_CONNECTION=no
 
 # Examples:
-# Local SQL Server with SQL Auth:
-# DB_SERVER=localhost
-# DB_DATABASE=AdventureWorks
-# DB_USERNAME=sa
-# DB_PASSWORD=YourPassword123
-# DB_TRUSTED_CONNECTION=no
+# Windows Auth: DB_TRUSTED_CONNECTION=yes
+# SQL Auth: DB_TRUSTED_CONNECTION=no (provide username/password)
+"""
 
-# Remote SQL Server with Windows Auth:
-# DB_SERVER=sql-server.company.com
-# DB_DATABASE=SalesDB
-# DB_TRUSTED_CONNECTION=yes
-'''
-
-    files["sql-rag-system/backend/.gitignore"] = '''# Python
+    files[f"{base_dir}/backend/.gitignore"] = """# Python
 __pycache__/
 *.py[cod]
-*$py.class
 *.so
-.Python
-build/
-dist/
 *.egg-info/
+dist/
+build/
 
 # Virtual Environment
 venv/
 env/
-ENV/
-.venv
+.venv/
 
-# Environment variables
+# Environment
 .env
 .env.local
 
@@ -282,61 +273,20 @@ Thumbs.db
 
 # Logs
 *.log
+"""
 
-# Database
-*.db
-*.sqlite
-'''
-
-    # Note: app.py and test_connection.py are too long for this generator
-    # They need to be copied from the artifacts
-    
-    files["sql-rag-system/backend/_COPY_app.py.txt"] = '''
-⚠️ IMPORTANT: This file is a placeholder.
-
-Please copy the content of the 'backend_app' artifact to create app.py
-
-The app.py file is approximately 350 lines and contains:
-- FastAPI server setup
-- Local Llama integration
-- SQL generation logic
-- Database connection handling
-- API endpoints
-
-Artifact name: backend_app
-Target file: backend/app.py
-'''
-
-    files["sql-rag-system/backend/_COPY_test_connection.py.txt"] = '''
-⚠️ IMPORTANT: This file is a placeholder.
-
-Please copy the content of the 'test_scripts' artifact to create test_connection.py
-
-The test_connection.py file is approximately 200 lines and contains:
-- Database connection testing
-- Llama server connection testing
-- Model availability checking
-- Diagnostic output
-
-Artifact name: test_scripts
-Target file: backend/test_connection.py
-'''
-
-    # ==================== FRONTEND FILES ====================
-    
-    files["sql-rag-system/frontend/package.json"] = '''{
+    files[f"{base_dir}/frontend/package.json"] = """{
   "name": "sql-rag-frontend",
   "version": "1.0.0",
-  "description": "SQL Server RAG System - Frontend",
   "private": true,
   "proxy": "http://localhost:8000",
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
-    "recharts": "^2.8.0",
+    "recharts": "^2.10.0",
     "lucide-react": "^0.263.1",
-    "ogl": "^1.0.4"
+    "ogl": "^1.0.6"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -348,19 +298,15 @@ Target file: backend/test_connection.py
     "extends": ["react-app"]
   },
   "browserslist": {
-    "production": [">0.2%", "not dead", "not op_mini all"],
+    "production": [">0.2%", "not dead"],
     "development": ["last 1 chrome version", "last 1 firefox version"]
   }
 }
-'''
+"""
 
-    files["sql-rag-system/frontend/.gitignore"] = '''# Dependencies
+    files[f"{base_dir}/frontend/.gitignore"] = """# Dependencies
 node_modules/
-/.pnp
-.pnp.js
-
-# Testing
-/coverage
+.pnp/
 
 # Production
 /build
@@ -380,25 +326,25 @@ yarn-error.log*
 # IDE
 .vscode/
 .idea/
-'''
+"""
 
-    files["sql-rag-system/frontend/public/index.html"] = '''<!DOCTYPE html>
+    files[f"{base_dir}/frontend/public/index.html"] = """<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta name="description" content="SQL Server RAG System - Chat with your database" />
-    <title>SQL Server RAG - Database Chat Assistant</title>
+    <meta name="theme-color" content="#000428" />
+    <meta name="description" content="SQL Server RAG System - Chat with your database using natural language" />
+    <title>SQL Server RAG Assistant</title>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
   </body>
 </html>
-'''
+"""
 
-    files["sql-rag-system/frontend/src/index.js"] = '''import React from 'react';
+    files[f"{base_dir}/frontend/src/index.js"] = """import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
@@ -409,9 +355,9 @@ root.render(
     <App />
   </React.StrictMode>
 );
-'''
+"""
 
-    files["sql-rag-system/frontend/src/index.css"] = '''* {
+    files[f"{base_dir}/frontend/src/index.css"] = """* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -427,7 +373,7 @@ body {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  font-family: 'Courier New', monospace;
 }
 
 #root {
@@ -441,7 +387,6 @@ code {
 
 ::-webkit-scrollbar-track {
   background: rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -452,9 +397,9 @@ code {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(59, 130, 246, 0.7);
 }
-'''
+"""
 
-    files["sql-rag-system/frontend/src/Galaxy.css"] = '''.galaxy-container {
+    files[f"{base_dir}/frontend/src/Galaxy.css"] = """.galaxy-container {
   width: 100%;
   height: 100%;
   position: relative;
@@ -464,126 +409,179 @@ code {
   width: 100% !important;
   height: 100% !important;
 }
-'''
+"""
 
-    files["sql-rag-system/frontend/src/_COPY_App.js.txt"] = '''
-⚠️ IMPORTANT: This file is a placeholder.
+    # Placeholder files for large components
+    files[f"{base_dir}/backend/_INSTRUCTIONS_app.py.md"] = """# ⚠️ REQUIRED: Copy app.py
 
-Please copy the content of the 'frontend_app_webgl' artifact to create App.js
+This file needs to be created manually.
 
-The App.js file is approximately 650 lines and contains:
-- React main application component
+## Steps:
+
+1. Look for the artifact named: **`backend_app`**
+2. Copy the entire content (~350 lines)
+3. Create file: `backend/app.py`
+4. Paste the content and save
+
+## What it contains:
+- FastAPI server setup
+- Local Llama integration  
+- SQL generation with LLM
+- Database connection handling
+- API endpoints (/query, /schema, /tables, etc.)
+
+## Verify:
+After copying, you should be able to run:
+```bash
+python app.py
+```
+"""
+
+    files[f"{base_dir}/backend/_INSTRUCTIONS_test_connection.py.md"] = """# ⚠️ REQUIRED: Copy test_connection.py
+
+This file needs to be created manually.
+
+## Steps:
+
+1. Look for the artifact named: **`test_scripts`**
+2. Copy the entire content (~200 lines)
+3. Create file: `backend/test_connection.py`
+4. Paste the content and save
+
+## What it contains:
+- Database connection testing
+- Llama server connection testing
+- Model availability check
+- Diagnostic output
+
+## Verify:
+After copying, you should be able to run:
+```bash
+python test_connection.py
+```
+"""
+
+    files[f"{base_dir}/frontend/src/_INSTRUCTIONS_App.js.md"] = """# ⚠️ REQUIRED: Copy App.js
+
+This file needs to be created manually.
+
+## Steps:
+
+1. Look for the artifact named: **`frontend_app_webgl`**
+2. Copy the entire content (~650 lines)
+3. Create file: `frontend/src/App.js`
+4. Paste the content and save
+
+## What it contains:
+- Main React application
 - Galaxy background integration
 - Chat interface
-- Chart rendering
+- Chart rendering with Recharts
 - Data table display
 - Status monitoring
 
-Artifact name: frontend_app_webgl
-Target file: frontend/src/App.js
-'''
+## Verify:
+After copying, the file should start with:
+```javascript
+import React, { useState, useEffect } from 'react';
+import { LineChart, Line, ... } from 'recharts';
+```
+"""
 
-    files["sql-rag-system/frontend/src/_COPY_Galaxy.jsx.txt"] = '''
-⚠️ IMPORTANT: This file is a placeholder.
+    files[f"{base_dir}/frontend/src/_INSTRUCTIONS_Galaxy.jsx.md"] = """# ⚠️ REQUIRED: Copy Galaxy.jsx
 
-Please copy the WebGL Galaxy component from the document you provided earlier.
+This file needs to be created manually.
 
-The Galaxy.jsx file is approximately 350 lines and contains:
-- WebGL shader code
-- OGL rendering
-- Mouse interaction
+## Steps:
+
+1. Use the **WebGL Galaxy component** from the document you provided earlier
+2. Copy the entire content (~350 lines)
+3. Create file: `frontend/src/Galaxy.jsx` (or `Galaxy.tsx`)
+4. Paste the content and save
+
+## What it contains:
+- WebGL shader code (vertex and fragment)
+- OGL rendering engine
+- Mouse interaction handling
 - Star field generation
 - Customizable parameters
 
-Source: The document you provided with the OGL imports
-Target file: frontend/src/Galaxy.jsx
-'''
+## Verify:
+After copying, the file should start with:
+```javascript
+import { Renderer, Program, Mesh, Color, Triangle } from 'ogl';
+import { useEffect, useRef } from 'react';
+import './Galaxy.css';
+```
+"""
 
     # Create all files
-    print("\n" + "="*60)
-    print("🌌 SQL Server RAG System - Project Generator")
-    print("="*60 + "\n")
+    print_status("Generating project files...\n")
     
-    total_files = len(files)
-    created_files = 0
+    created = 0
+    failed = 0
     
     for filepath, content in files.items():
         if create_file(filepath, content):
-            created_files += 1
+            created += 1
+        else:
+            failed += 1
     
-    print("\n" + "="*60)
-    print(f"📊 Summary: Created {created_files}/{total_files} files")
-    print("="*60 + "\n")
+    print(f"\n{'='*70}")
+    print(f"{GREEN}✓ Created {created} files{RESET}")
+    if failed > 0:
+        print(f"{RED}✗ Failed {failed} files{RESET}")
+    print(f"{'='*70}\n")
     
-    # Print instructions for manual files
-    print("⚠️  MANUAL STEPS REQUIRED:\n")
-    print("The following files need to be copied manually from artifacts:\n")
-    print("1. backend/app.py")
-    print("   → Copy from artifact: 'backend_app'")
-    print("   → Approximately 350 lines\n")
+    # Print next steps
+    print(f"{YELLOW}📋 IMPORTANT - Manual Steps Required:{RESET}\n")
+    print("You need to copy 4 large files from the chat artifacts:\n")
     
-    print("2. backend/test_connection.py")
-    print("   → Copy from artifact: 'test_scripts'")
-    print("   → Approximately 200 lines\n")
+    steps = [
+        ("backend/app.py", "backend_app", "~350 lines"),
+        ("backend/test_connection.py", "test_scripts", "~200 lines"),
+        ("frontend/src/App.js", "frontend_app_webgl", "~650 lines"),
+        ("frontend/src/Galaxy.jsx", "User's document", "~350 lines")
+    ]
     
-    print("3. frontend/src/App.js")
-    print("   → Copy from artifact: 'frontend_app_webgl'")
-    print("   → Approximately 650 lines\n")
+    for i, (file, artifact, size) in enumerate(steps, 1):
+        print(f"{i}. {BLUE}{file}{RESET}")
+        print(f"   Artifact: {artifact}")
+        print(f"   Size: {size}")
+        print()
     
-    print("4. frontend/src/Galaxy.jsx")
-    print("   → Copy from the document you provided")
-    print("   → Approximately 350 lines\n")
+    print(f"{'='*70}")
+    print(f"{GREEN}✅ Next Steps:{RESET}")
+    print(f"{'='*70}\n")
     
-    print("="*60)
-    print("📁 Project Structure Created:")
-    print("="*60)
-    print("""
-sql-rag-system/
-├── README.md
-├── QUICK_START.md
-├── backend/
-│   ├── requirements.txt
-│   ├── .env.template
-│   ├── .gitignore
-│   ├── _COPY_app.py.txt (placeholder)
-│   └── _COPY_test_connection.py.txt (placeholder)
-└── frontend/
-    ├── package.json
-    ├── .gitignore
-    ├── public/
-    │   └── index.html
-    └── src/
-        ├── index.js
-        ├── index.css
-        ├── Galaxy.css
-        ├── _COPY_App.js.txt (placeholder)
-        └── _COPY_Galaxy.jsx.txt (placeholder)
-""")
-    
-    print("="*60)
-    print("✅ Next Steps:")
-    print("="*60)
-    print("""
-1. Copy the 4 large files from artifacts (see above)
-2. Edit backend/.env with your database credentials
-3. Install backend: cd backend && pip install -r requirements.txt
-4. Install frontend: cd frontend && npm install
-5. Start Ollama: ollama serve && ollama pull llama3.1
-6. Start backend: python backend/app.py
-7. Start frontend: npm start (in frontend directory)
-8. Open http://localhost:3000
-
-🎉 Enjoy your Database RAG System!
-""")
+    print("1. Copy the 4 files above from artifacts")
+    print("2. Configure database:")
+    print(f"   {BLUE}cd {base_dir}/backend{RESET}")
+    print(f"   {BLUE}cp .env.template .env{RESET}")
+    print(f"   {BLUE}nano .env{RESET}  # Edit with your settings")
+    print("\n3. Install backend:")
+    print(f"   {BLUE}pip install -r requirements.txt{RESET}")
+    print(f"   {BLUE}python test_connection.py{RESET}")
+    print(f"   {BLUE}python app.py{RESET}")
+    print("\n4. Install frontend (new terminal):")
+    print(f"   {BLUE}cd {base_dir}/frontend{RESET}")
+    print(f"   {BLUE}npm install{RESET}")
+    print(f"   {BLUE}npm start{RESET}")
+    print("\n5. Start Ollama (new terminal):")
+    print(f"   {BLUE}ollama serve{RESET}")
+    print(f"   {BLUE}ollama pull llama3.1{RESET}")
+    print("\n6. Open browser:")
+    print(f"   {BLUE}http://localhost:3000{RESET}")
+    print(f"\n{'='*70}")
+    print(f"{GREEN}🎉 Project structure created successfully!{RESET}")
+    print(f"{'='*70}\n")
 
 if __name__ == "__main__":
     try:
-        create_directory_structure()
-        print()
-        generate_files()
+        main()
     except KeyboardInterrupt:
-        print("\n\n❌ Operation cancelled by user")
+        print(f"\n\n{RED}Operation cancelled{RESET}")
         sys.exit(1)
     except Exception as e:
-        print(f"\n\n❌ Error: {e}")
+        print(f"\n\n{RED}Error: {e}{RESET}")
         sys.exit(1)
